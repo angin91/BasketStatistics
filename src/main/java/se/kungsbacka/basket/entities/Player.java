@@ -98,22 +98,7 @@ public class Player {
 	
 	@Override
 	public String toString(){
-		return "Name: " + getName() + "\n" +
-				"Jersey number: " + getJerseyNumber() + "\n" +
-				"Twopoint attempt: " + getTwoPointAttempt() + "\n" +
-				"Twopoint made: " + getTwoPointMade() + "\n" +
-				"Threepoint attempt: " + getThreePointAttempt() + "\n" +
-				"Threepoint made: " + getThreePointMade() + "\n" +
-				"Freethrows attpemt: " + getFreeThrowAttempt() + "\n" +
-				"Freethrows made: " + getFreeThrowMade() + "\n" +
-				"Def rebounds: " + getDefRebounds() + "\n" +
-				"Off rebounds: " + getOffRebounds() + "\n" +
-				"Total rebounds: " + getTotalRebounds() + "\n" +
-				"Steals: " + getSteals() + "\n" +
-				"Assists: " + getAssists() + "\n" +
-				"Fouls: " + getFouls() + "\n" +
-				"Blocks: " + getBlocks() + "\n" +
-				"Deflections: " + getDeflections() + "\n" +
-				"Turnovers: " + getTurnovers();
+		return getJerseyNumber() +
+				" - " + getName();
 	}
 }

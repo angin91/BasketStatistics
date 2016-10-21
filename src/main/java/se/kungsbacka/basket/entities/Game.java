@@ -28,10 +28,6 @@ public class Game {
 
 	@Override
 	public String toString(){
-		String toString = "Home Team: " + homeTeam + "\n" + "Away Team: " + awayTeam;
-		for(Player player: players){
-			toString += "\n\n" + player.toString();
-		}
-		return toString;
+		return homeTeam + " vs " + awayTeam;
 	}
 }
