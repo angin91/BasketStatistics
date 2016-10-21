@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
+import se.kungsbacka.basket.imports.ReadExcel;
 
 public class Frame extends JFrame{
 
@@ -31,31 +32,13 @@ public class Frame extends JFrame{
 		games = new ArrayList<Game>();
 		players = new ArrayList<Player>();
 		
-		//Test array. Will remove
-		players2 = new ArrayList<Player>();
-		Player player = new Player();
-		player.setName("Andreas Angin");
-		player.setJerseyNumber(7);
-		players.add(player);
-		players2.add(player);
-		player = new Player();
-		player.setName("John Sundemo");
-		player.setJerseyNumber(12);
-		players.add(player);
-		//Test array. Will remove
-		
-		//Test array. Will remove
-		Game game = new Game();
-		game.setHomeTeam("Kungsbacka");
-		game.setAwayTeam("Trollhättan");
-		game.setPlayers(players);
+		//-----------------------Test array. Will remove----------------------------------
+		ReadExcel readExcel = new ReadExcel();
+		Game game = readExcel.readExcel("files/test.xlsx");
 		games.add(game);
-		game = new Game();
-		game.setHomeTeam("Varberg");
-		game.setAwayTeam("Kungsbacka");
-		game.setPlayers(players2);
+		game = readExcel.readExcel("files/test2.xlsx");
 		games.add(game);
-		//Test array. Will remove
+		//-----------------------Test array. Will remove----------------------------------
 		
 		gameList = new JList(games.toArray());
 		add(new JScrollPane(gameList));
