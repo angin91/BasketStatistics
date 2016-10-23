@@ -10,8 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
@@ -20,16 +22,19 @@ import se.kungsbacka.basket.imports.ReadExcel;
 public class Panel extends JPanel {
 
 	private JButton newGameButton;
-	private JButton seeStatButton;
+	private JButton seeTrendButton;
 	private JList<Game> gameList;
 	private JList<Player> playerList;
 	private DefaultListModel<Game> games;
 	private DefaultListModel<Player> players;
+	private JTable statisticsTable;
+	private DefaultTableModel statisticsModel;
+	private JScrollPane statisticsScrollPane;
 
 	public Panel() {
 		games = new DefaultListModel<Game>();
 		players = new DefaultListModel<Player>();
-		
+
 		setLayout(null);
 
 		// -----------------------Test array. Will
@@ -56,9 +61,33 @@ public class Panel extends JPanel {
 		newGameButton.setBounds(660, 20, 140, 140);
 		add(newGameButton);
 
-		seeStatButton = new JButton("See stats");
-		seeStatButton.setBounds(660, 180, 140, 140);
-		add(seeStatButton);
+		seeTrendButton = new JButton("See player trend");
+		seeTrendButton.setBounds(660, 180, 140, 140);
+		add(seeTrendButton);
+
+		statisticsModel = new DefaultTableModel();
+		statisticsModel.addColumn("Name");
+		statisticsModel.addColumn("Number");
+		statisticsModel.addColumn("FTA");
+		statisticsModel.addColumn("FTM");
+		statisticsModel.addColumn("2PA");
+		statisticsModel.addColumn("2PM");
+		statisticsModel.addColumn("3PA");
+		statisticsModel.addColumn("3PM");
+		statisticsModel.addColumn("DEF");
+		statisticsModel.addColumn("OFF");
+		statisticsModel.addColumn("TOT");
+		statisticsModel.addColumn("ST");
+		statisticsModel.addColumn("AST");
+		statisticsModel.addColumn("PF");
+		statisticsModel.addColumn("BS");
+		statisticsModel.addColumn("DEFL");
+		statisticsModel.addColumn("TO");
+		statisticsModel.addRow(new Object[] { "1", "2", "3", "4" });
+		statisticsTable = new JTable(statisticsModel);
+		statisticsScrollPane = new JScrollPane(statisticsTable);
+		statisticsScrollPane.setBounds(20, 400, 800, 300);
+		add(statisticsScrollPane);
 
 		gameList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -67,6 +96,7 @@ public class Panel extends JPanel {
 				for (Player player : game.getPlayers()) {
 					players.addElement(player);
 				}
+				addStatistics(game);
 			}
 		});
 		newGameButton.addActionListener(new ActionListener() {
@@ -87,5 +117,37 @@ public class Panel extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1000, 800);
 		frame.setVisible(true);
+	}
+	
+	private void addStatistics(Game game){
+
+		// Clear statistics
+		if (statisticsModel.getRowCount() > 0) {
+			for (int i = statisticsModel.getRowCount() - 1; i > -1; i--) {
+				statisticsModel.removeRow(i);
+			}
+		}
+		
+		//Add statistics
+		for (Player player : game.getPlayers()) {
+			statisticsModel.addRow(new Object[] { player.getName(),
+					player.getJerseyNumber(),
+					player.getFreeThrowAttempt(),
+					player.getFreeThrowMade(),
+					player.getTwoPointAttempt(),
+					player.getTwoPointMade(),
+					player.getThreePointAttempt(),
+					player.getThreePointMade(),
+					player.getDefRebounds(),
+					player.getOffRebounds(),
+					player.getOffRebounds() + player.getDefRebounds(),
+					player.getSteals(),
+					player.getAssists(),
+					player.getFouls(),
+					player.getBlocks(),
+					player.getDeflections(),
+					player.getTurnovers()});
+		}
+		statisticsTable.setModel(statisticsModel);
 	}
 }
