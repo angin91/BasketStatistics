@@ -1,5 +1,7 @@
 package se.kungsbacka.basket.imports;
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
