@@ -3,7 +3,9 @@ package se.kungsbacka.basket.imports;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,8 +17,12 @@ import se.kungsbacka.basket.entities.Player;
 
 public class ReadExcel {
 
+	private String name;
+	private ArrayList<Player> players;
+
 	@SuppressWarnings("resource")
-	public Game readExcel(String pathToFile) {
+	public List<Game> readExcel(String pathToFile, List<Game> games) {
+		players = new ArrayList<Player>();
 		Game game = new Game();
 		try {
 			boolean newGame = true;
@@ -36,7 +42,7 @@ public class ReadExcel {
 				// For each row, iterate through each columns
 				Iterator<Cell> cellIterator = row.cellIterator();
 				while (cellIterator.hasNext()) {
-					
+
 					Cell cell = cellIterator.next();
 					if (newGame) {
 						rowIterator.next();
@@ -52,35 +58,82 @@ public class ReadExcel {
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						int i = (int) cell.getNumericCellValue();
-						if (counter == 0) {player.setJerseyNumber(i);}
-						if (counter == 1) {player.setTwoPointAttempt(i);}
-						if (counter == 2) {player.setTwoPointMade(i);}
-						if (counter == 3) {player.setThreePointAttempt(i);}
-						if (counter == 4) {player.setThreePointMade(i);}
-						if (counter == 5) {player.setFreeThrowAttempt(i);}
-						if (counter == 6) {player.setFreeThrowMade(i);}
-						if (counter == 7) {player.setDefRebounds(i);}
-						if (counter == 8) {player.setOffRebounds(i);}
-						if (counter == 9) {player.setSteals(i);}
-						if (counter == 10) {player.setAssists(i);}
-						if (counter == 11) {player.setFouls(i);}
-						if (counter == 12) {player.setBlocks(i);}
-						if (counter == 13) {player.setDeflections(i);}
-						if (counter == 14) {player.setTurnovers(i);}
+						if (counter == 0) {
+							player.setJerseyNumber(i);
+						}
+						if (counter == 1) {
+							player.setTwoPointAttempt(i);
+						}
+						if (counter == 2) {
+							player.setTwoPointMade(i);
+						}
+						if (counter == 3) {
+							player.setThreePointAttempt(i);
+						}
+						if (counter == 4) {
+							player.setThreePointMade(i);
+						}
+						if (counter == 5) {
+							player.setFreeThrowAttempt(i);
+						}
+						if (counter == 6) {
+							player.setFreeThrowMade(i);
+						}
+						if (counter == 7) {
+							player.setDefRebounds(i);
+						}
+						if (counter == 8) {
+							player.setOffRebounds(i);
+						}
+						if (counter == 9) {
+							player.setSteals(i);
+						}
+						if (counter == 10) {
+							player.setAssists(i);
+						}
+						if (counter == 11) {
+							player.setFouls(i);
+						}
+						if (counter == 12) {
+							player.setBlocks(i);
+						}
+						if (counter == 13) {
+							player.setDeflections(i);
+						}
+						if (counter == 14) {
+							player.setTurnovers(i);
+						}
 						counter++;
 						break;
 					default:
 					}
 				}
-				if(player.getName() != null){
-					game.addPlayer(player);
-				}
+				addGamesIntoPlayers(games, game, player);
+				name = player.getName();
 			}
+			games.add(game);
 			newGame = true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return game;
+		return games;
+	}
+
+	private void addGamesIntoPlayers(List<Game> games, Game game, Player player) {
+		if (player.getName() != null) {
+			game.addPlayer(player);
+
+			for (int i = 0; i < games.size(); i++) {
+				ArrayList<Player> players = games.get(i).getPlayers();
+				for (int j = 0; j < players.size(); j++) {
+					if (player.getName().equals(players.get(j).getName())) {
+						players.get(j).getGames().add(game);
+						player.getGames().add(games.get(i));
+					}
+				}
+			}
+			player.getGames().add(game);
+		}
 	}
 }
+

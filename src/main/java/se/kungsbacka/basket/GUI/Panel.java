@@ -1,16 +1,21 @@
 package se.kungsbacka.basket.GUI;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -30,20 +35,25 @@ public class Panel extends JPanel {
 	private JTable statisticsTable;
 	private DefaultTableModel statisticsModel;
 	private JScrollPane statisticsScrollPane;
+	private List<Game> allGames;
 
 	public Panel() {
+		allGames = new ArrayList<Game>();
 		games = new DefaultListModel<Game>();
 		players = new DefaultListModel<Player>();
+		final ReadExcel readExcel = new ReadExcel();
 
 		setLayout(null);
 
 		// -----------------------Test array. Will
 		// remove----------------------------------
-		final ReadExcel readExcel = new ReadExcel();
-		Game game = readExcel.readExcel("files/test.xlsx");
-		games.addElement(game);
-		game = readExcel.readExcel("files/test2.xlsx");
-		games.addElement(game);
+//		allGames = readExcel.readExcel("files/test.xlsx", allGames);
+//		allGames = readExcel.readExcel("files/test2.xlsx", allGames);
+//		allGames = readExcel.readExcel("files/test3.xlsx", allGames);
+//		games.removeAllElements();
+//		for (Game game : allGames) {
+//			games.addElement(game);
+//		}
 		// -----------------------Test array. Will
 		// remove----------------------------------
 
@@ -103,9 +113,39 @@ public class Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
 				fc.showOpenDialog(Panel.this);
-				String s = fc.getSelectedFile().getPath();
-				Game game = readExcel.readExcel(s);
-				games.addElement(game);
+
+				allGames = readExcel.readExcel(fc.getSelectedFile().getPath(),
+						allGames);
+				games.removeAllElements();
+				for (Game game : allGames) {
+					games.addElement(game);
+				}
+			}
+		});
+		seeTrendButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						Player player = playerList.getSelectedValue();
+						if(player == null){
+							String message = "No player selected";
+							String title = "No player";
+							JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_OPTION);
+						}else if(player.getGames().size() <= 1){
+							String message = "Only played one game. No trends";
+							String title = "No trends";
+							JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_OPTION);
+						}else {
+							GraphPanel graphPanel = new GraphPanel(player);
+							graphPanel.setPreferredSize(new Dimension(800, 600));
+							JFrame frame = new JFrame("Trend graph");
+							frame.getContentPane().add(graphPanel);
+							frame.pack();
+							frame.setLocationRelativeTo(null);
+							frame.setVisible(true);
+						}
+					}
+				});
 			}
 		});
 	}
@@ -118,8 +158,8 @@ public class Panel extends JPanel {
 		frame.setSize(1000, 800);
 		frame.setVisible(true);
 	}
-	
-	private void addStatistics(Game game){
+
+	private void addStatistics(Game game) {
 
 		// Clear statistics
 		if (statisticsModel.getRowCount() > 0) {
@@ -127,26 +167,19 @@ public class Panel extends JPanel {
 				statisticsModel.removeRow(i);
 			}
 		}
-		
-		//Add statistics
+
+		// Add statistics
 		for (Player player : game.getPlayers()) {
 			statisticsModel.addRow(new Object[] { player.getName(),
-					player.getJerseyNumber(),
-					player.getFreeThrowAttempt(),
-					player.getFreeThrowMade(),
-					player.getTwoPointAttempt(),
-					player.getTwoPointMade(),
-					player.getThreePointAttempt(),
-					player.getThreePointMade(),
-					player.getDefRebounds(),
+					player.getJerseyNumber(), player.getFreeThrowAttempt(),
+					player.getFreeThrowMade(), player.getTwoPointAttempt(),
+					player.getTwoPointMade(), player.getThreePointAttempt(),
+					player.getThreePointMade(), player.getDefRebounds(),
 					player.getOffRebounds(),
 					player.getOffRebounds() + player.getDefRebounds(),
-					player.getSteals(),
-					player.getAssists(),
-					player.getFouls(),
-					player.getBlocks(),
-					player.getDeflections(),
-					player.getTurnovers()});
+					player.getSteals(), player.getAssists(), player.getFouls(),
+					player.getBlocks(), player.getDeflections(),
+					player.getTurnovers() });
 		}
 		statisticsTable.setModel(statisticsModel);
 	}

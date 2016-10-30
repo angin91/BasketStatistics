@@ -1,5 +1,8 @@
 package se.kungsbacka.basket.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
 	
 	private String name;
@@ -18,12 +21,14 @@ public class Player {
 	private int blocks;
 	private int deflections;
 	private int turnovers;
+	private List<Game> games;
 	
-	public Player() {}
+	public Player() {games = new ArrayList<Game>();}
 	
 	public Player(String name, int jerseyNumber) {
 		setName(name);
 		setJerseyNumber(jerseyNumber);
+		games = new ArrayList<Game>();
 	}
 	public Player(String name, int jerseyNumber, int freeThrowAttempt, int freeThrowMade, int twoPointAttempt, int twoPointMade, int threePointAttempt, 
 			int threePointMade, int defRebounds, int offRebounds, int steals, int assists, int fouls, int blocks, int deflections, int turnovers) {
@@ -43,6 +48,7 @@ public class Player {
 		setBlocks(blocks);
 		setDeflections(deflections);
 		setTurnovers(turnovers);
+		games = new ArrayList<Game>();
 	}
 
 	//Add statistics
@@ -95,10 +101,13 @@ public class Player {
 	public void setDeflections(int deflections) {this.deflections = deflections;}
 	public int getTurnovers() {return turnovers;}
 	public void setTurnovers(int turnovers) {this.turnovers = turnovers;}
+	public List<Game> getGames() {return games;}
+	public void setGames(List<Game> games) {this.games = games;}
 	
 	@Override
 	public String toString(){
 		return getJerseyNumber() +
 				" - " + getName();
 	}
+
 }

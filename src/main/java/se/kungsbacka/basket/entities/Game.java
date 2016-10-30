@@ -25,6 +25,15 @@ public class Game {
 	public void setAwayTeam(String awayTeam) {this.awayTeam = awayTeam;}
 	public String getHomeTeam() {return homeTeam;}
 	public void setHomeTeam(String homeTeam) {this.homeTeam = homeTeam;}
+	public Player getPlayer(String name){
+		ArrayList<Player> players2 = getPlayers();
+		for (Player player : players2) {
+			if(player.getName().equals(name)){
+				return player;
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public String toString(){
