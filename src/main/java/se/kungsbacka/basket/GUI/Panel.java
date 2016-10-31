@@ -47,13 +47,13 @@ public class Panel extends JPanel {
 
 		// -----------------------Test array. Will
 		// remove----------------------------------
-//		allGames = readExcel.readExcel("files/test.xlsx", allGames);
-//		allGames = readExcel.readExcel("files/test2.xlsx", allGames);
-//		allGames = readExcel.readExcel("files/test3.xlsx", allGames);
-//		games.removeAllElements();
-//		for (Game game : allGames) {
-//			games.addElement(game);
-//		}
+		// allGames = readExcel.readExcel("files/test.xlsx", allGames);
+		// allGames = readExcel.readExcel("files/test2.xlsx", allGames);
+		// allGames = readExcel.readExcel("files/test3.xlsx", allGames);
+		// games.removeAllElements();
+		// for (Game game : allGames) {
+		// games.addElement(game);
+		// }
 		// -----------------------Test array. Will
 		// remove----------------------------------
 
@@ -113,13 +113,10 @@ public class Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
 				fc.showOpenDialog(Panel.this);
+				String path = fc.getSelectedFile().getPath();
 
-				allGames = readExcel.readExcel(fc.getSelectedFile().getPath(),
-						allGames);
-				games.removeAllElements();
-				for (Game game : allGames) {
-					games.addElement(game);
-				}
+				allGames = readExcel.readExcel(path, allGames);
+				games.addElement(allGames.get(allGames.size()-1));
 			}
 		});
 		seeTrendButton.addActionListener(new ActionListener() {
@@ -127,17 +124,18 @@ public class Panel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						Player player = playerList.getSelectedValue();
-						if(player == null){
+						if (player == null) {
 							String message = "No player selected";
 							String title = "No player";
-							JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_OPTION);
-						}else if(player.getGames().size() <= 1){
+							JOptionPane.showMessageDialog(null, message, title, 2);
+						} else if (player.getGames().size() <= 1) {
 							String message = "Only played one game. No trends";
 							String title = "No trends";
-							JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_OPTION);
-						}else {
+							JOptionPane.showMessageDialog(null, message, title, 2);
+						} else {
 							GraphPanel graphPanel = new GraphPanel(player);
-							graphPanel.setPreferredSize(new Dimension(800, 600));
+							graphPanel
+									.setPreferredSize(new Dimension(800, 600));
 							JFrame frame = new JFrame("Trend graph");
 							frame.getContentPane().add(graphPanel);
 							frame.pack();
