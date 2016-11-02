@@ -4,35 +4,40 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
 
 public class ReadExcel {
 
-	private String name;
-	private ArrayList<Player> players;
+	boolean newGame;
 
-	@SuppressWarnings("resource")
 	public List<Game> readExcel(String pathToFile, List<Game> games) {
-		players = new ArrayList<Player>();
 		Game game = new Game();
+		newGame = true;
 		try {
-			boolean newGame = true;
 			File myFile = new File(pathToFile);
 			FileInputStream fis = new FileInputStream(myFile);
-			XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
-			XSSFSheet mySheet = myWorkBook.getSheetAt(0);
+			org.apache.poi.ss.usermodel.Workbook workbook = null;
+			try {
+				workbook = WorkbookFactory.create(fis);
+			} catch (InvalidFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			org.apache.poi.ss.usermodel.Sheet mySheet = workbook.getSheetAt(0);
 			Iterator<Row> rowIterator = mySheet.iterator();
 
-			rowIterator.next();
 			while (rowIterator.hasNext()) {
 
 				Player player = new Player();
@@ -45,77 +50,113 @@ public class ReadExcel {
 
 					Cell cell = cellIterator.next();
 					if (newGame) {
-						rowIterator.next();
-						game.setHomeTeam(cell.getStringCellValue());
-						cell = cellIterator.next();
-						game.setAwayTeam(cell.getStringCellValue());
+						if (pathToFile.endsWith(".xlsx")) {
+							if (HSSFDateUtil.isCellDateFormatted(cell)) {
+								game.setDate(cell.getDateCellValue());
+							}
+						} else {
+							double ndate = cell.getNumericCellValue();
+							Date date = HSSFDateUtil.getJavaDate(ndate);
+							game.setDate(date);
+						}
+						row = rowIterator.next();
+						Iterator<Cell> next = row.cellIterator();
+						game.setTeams(next.next().getStringCellValue());
+						row = rowIterator.next();
 						newGame = false;
 						break;
 					}
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_STRING:
+						if (cell.getStringCellValue().equalsIgnoreCase("Sum")) {
+							returnGames(games, game);
+							return games;
+						}
 						player.setName(cell.getStringCellValue());
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
 						int i = (int) cell.getNumericCellValue();
-						if (counter == 0) {
-							player.setJerseyNumber(i);
-						}
 						if (counter == 1) {
-							player.setTwoPointAttempt(i);
-						}
-						if (counter == 2) {
-							player.setTwoPointMade(i);
-						}
-						if (counter == 3) {
-							player.setThreePointAttempt(i);
-						}
-						if (counter == 4) {
-							player.setThreePointMade(i);
-						}
-						if (counter == 5) {
-							player.setFreeThrowAttempt(i);
-						}
-						if (counter == 6) {
-							player.setFreeThrowMade(i);
-						}
-						if (counter == 7) {
-							player.setDefRebounds(i);
-						}
-						if (counter == 8) {
-							player.setOffRebounds(i);
-						}
-						if (counter == 9) {
-							player.setSteals(i);
-						}
-						if (counter == 10) {
-							player.setAssists(i);
-						}
-						if (counter == 11) {
 							player.setFouls(i);
 						}
+						if (counter == 2) {
+							player.setTwoPointAttempt(i);
+						}
+						if (counter == 3) {
+							player.setTwoPointMade(i);
+						}
+						if (counter == 5) {
+							player.setThreePointAttempt(i);
+						}
+						if (counter == 6) {
+							player.setThreePointMade(i);
+						}
+						if (counter == 11) {
+							player.setFreeThrowAttempt(i);
+						}
 						if (counter == 12) {
+							player.setFreeThrowMade(i);
+						}
+						if (counter == 15) {
+							player.setDefRebounds(i);
+						}
+						if (counter == 16) {
+							player.setOffRebounds(i);
+						}
+						if (counter == 18) {
+							player.setSteals(i);
+						}
+						if (counter == 19) {
 							player.setBlocks(i);
 						}
-						if (counter == 13) {
-							player.setDeflections(i);
-						}
-						if (counter == 14) {
+						if (counter == 20) {
 							player.setTurnovers(i);
 						}
+						if (counter == 21) {
+							player.setAssists(i);
+						}
+						if (counter == 22) {
+							player.setDeflections(i);
+						}
 						counter++;
+
 						break;
 					default:
+						counter++;
+						break;
 					}
 				}
 				addGamesIntoPlayers(games, game, player);
-				name = player.getName();
 			}
-			games.add(game);
-			newGame = true;
+			games = returnGames(games, game);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return games;
+	}
+
+	private List<Game> returnGames(List<Game> games, Game game) {
+		games.add(game);
+		System.out.println(game);
+		games = sort(games);
+		newGame = true;
+		return games;
+	}
+
+	private List<Game> sort(List<Game> games) {
+		for (int s = 0; s <= games.size() - 1; s++) {
+			for (int k = 0; k <= games.size() - 2; k++) {
+				if (games.get(k).getDate().getTime() > games.get(k + 1)
+						.getDate().getTime()) {
+
+					Game tempGame = games.get(k);
+					games.set(k, games.get(k + 1));
+					games.set(k + 1, tempGame);
+
+				}
+			}
+		}
+
 		return games;
 	}
 
@@ -128,12 +169,13 @@ public class ReadExcel {
 				for (int j = 0; j < players.size(); j++) {
 					if (player.getName().equals(players.get(j).getName())) {
 						players.get(j).getGames().add(game);
+						players.get(j).setGames(sort(players.get(j).getGames()));
 						player.getGames().add(games.get(i));
 					}
 				}
 			}
 			player.getGames().add(game);
+			player.setGames(sort(player.getGames()));
 		}
 	}
 }
-

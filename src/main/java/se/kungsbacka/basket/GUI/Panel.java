@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -22,8 +23,10 @@ import javax.swing.table.DefaultTableModel;
 
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
+import se.kungsbacka.basket.helper.HelperClass;
 import se.kungsbacka.basket.imports.ReadExcel;
 
+@SuppressWarnings("serial")
 public class Panel extends JPanel {
 
 	private JButton newGameButton;
@@ -45,17 +48,14 @@ public class Panel extends JPanel {
 
 		setLayout(null);
 
-		// -----------------------Test array. Will
-		// remove----------------------------------
-		// allGames = readExcel.readExcel("files/test.xlsx", allGames);
-		// allGames = readExcel.readExcel("files/test2.xlsx", allGames);
-		// allGames = readExcel.readExcel("files/test3.xlsx", allGames);
-		// games.removeAllElements();
-		// for (Game game : allGames) {
-		// games.addElement(game);
-		// }
-		// -----------------------Test array. Will
-		// remove----------------------------------
+		// --Will remove
+		allGames = readExcel.readExcel("files/testreal2.xlsx", allGames);
+		allGames = readExcel.readExcel("files/testreal.xls", allGames);
+		games.removeAllElements();
+		for (Game game : allGames) {
+			games.addElement(game);
+		}
+		// -----Will Remove
 
 		gameList = new JList<Game>(games);
 		JScrollPane gameListScrollPane = new JScrollPane(gameList);
@@ -77,23 +77,28 @@ public class Panel extends JPanel {
 
 		statisticsModel = new DefaultTableModel();
 		statisticsModel.addColumn("Name");
-		statisticsModel.addColumn("Number");
-		statisticsModel.addColumn("FTA");
-		statisticsModel.addColumn("FTM");
+		statisticsModel.addColumn("PF");
 		statisticsModel.addColumn("2PA");
 		statisticsModel.addColumn("2PM");
+		statisticsModel.addColumn("2P%");
 		statisticsModel.addColumn("3PA");
 		statisticsModel.addColumn("3PM");
+		statisticsModel.addColumn("3P%");
+		statisticsModel.addColumn("TSA");
+		statisticsModel.addColumn("TSM");
+		statisticsModel.addColumn("TS%");
+		statisticsModel.addColumn("FTA");
+		statisticsModel.addColumn("FTM");
+		statisticsModel.addColumn("FT%");
+		statisticsModel.addColumn("PTS");
 		statisticsModel.addColumn("DEF");
 		statisticsModel.addColumn("OFF");
 		statisticsModel.addColumn("TOT");
 		statisticsModel.addColumn("ST");
-		statisticsModel.addColumn("AST");
-		statisticsModel.addColumn("PF");
 		statisticsModel.addColumn("BS");
-		statisticsModel.addColumn("DEFL");
 		statisticsModel.addColumn("TO");
-		statisticsModel.addRow(new Object[] { "1", "2", "3", "4" });
+		statisticsModel.addColumn("AST");
+		statisticsModel.addColumn("DEFL");
 		statisticsTable = new JTable(statisticsModel);
 		statisticsScrollPane = new JScrollPane(statisticsTable);
 		statisticsScrollPane.setBounds(20, 400, 800, 300);
@@ -116,7 +121,7 @@ public class Panel extends JPanel {
 				String path = fc.getSelectedFile().getPath();
 
 				allGames = readExcel.readExcel(path, allGames);
-				games.addElement(allGames.get(allGames.size()-1));
+				games.addElement(allGames.get(allGames.size() - 1));
 			}
 		});
 		seeTrendButton.addActionListener(new ActionListener() {
@@ -127,15 +132,17 @@ public class Panel extends JPanel {
 						if (player == null) {
 							String message = "No player selected";
 							String title = "No player";
-							JOptionPane.showMessageDialog(null, message, title, 2);
+							JOptionPane.showMessageDialog(null, message, title,
+									2);
 						} else if (player.getGames().size() <= 1) {
 							String message = "Only played one game. No trends";
 							String title = "No trends";
-							JOptionPane.showMessageDialog(null, message, title, 2);
+							JOptionPane.showMessageDialog(null, message, title,
+									2);
 						} else {
 							GraphPanel graphPanel = new GraphPanel(player);
 							graphPanel
-									.setPreferredSize(new Dimension(800, 600));
+									.setPreferredSize(new Dimension(840, 600));
 							JFrame frame = new JFrame("Trend graph");
 							frame.getContentPane().add(graphPanel);
 							frame.pack();
@@ -168,17 +175,37 @@ public class Panel extends JPanel {
 
 		// Add statistics
 		for (Player player : game.getPlayers()) {
-			statisticsModel.addRow(new Object[] { player.getName(),
-					player.getJerseyNumber(), player.getFreeThrowAttempt(),
-					player.getFreeThrowMade(), player.getTwoPointAttempt(),
-					player.getTwoPointMade(), player.getThreePointAttempt(),
-					player.getThreePointMade(), player.getDefRebounds(),
-					player.getOffRebounds(),
-					player.getOffRebounds() + player.getDefRebounds(),
-					player.getSteals(), player.getAssists(), player.getFouls(),
-					player.getBlocks(), player.getDeflections(),
-					player.getTurnovers() });
+			statisticsModel.addRow(new Object[] {
+					player.getName(),
+					player.getFouls(),
+					player.getTwoPointAttempt(),
+					player.getTwoPointMade(),
+					HelperClass.getTwoPointProcent(player.getTwoPointAttempt(),
+							player.getTwoPointMade()),
+					player.getThreePointAttempt(),
+					player.getThreePointMade(),
+					HelperClass.getThreePointProcent(
+							player.getThreePointAttempt(),
+							player.getThreePointMade()),
+					player.getTotalShotsAttempt(),
+					player.getTotalShotsMade(),
+					HelperClass.getTotalShotProcent(
+							player.getTotalShotsAttempt(),
+							player.getTotalShotsMade()),
+					player.getFreeThrowAttempt(),
+					player.getFreeThrowMade(),
+					HelperClass.getFreethrowProcent(
+							player.getFreeThrowAttempt(),
+							player.getFreeThrowMade()),
+					HelperClass.getTotalPoints(player.getTwoPointMade(),
+							player.getThreePointMade(),
+							player.getFreeThrowMade()),
+					player.getDefRebounds(), player.getOffRebounds(),
+					player.getTotalRebounds(), player.getSteals(),
+					player.getBlocks(), player.getTurnovers(),
+					player.getAssists(), player.getDeflections() });
 		}
+		statisticsModel.addRow(game.getTotalGameStatistics());
 		statisticsTable.setModel(statisticsModel);
 	}
 }

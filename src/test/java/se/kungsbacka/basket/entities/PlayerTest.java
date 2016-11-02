@@ -11,7 +11,6 @@ public class PlayerTest {
 	public void init(){
 		player = new Player();
 		player.setName("Andreas Angin");
-		player.setJerseyNumber(22);
 		player.setFreeThrowAttempt(1);
 		player.setFreeThrowMade(2);
 		player.setTwoPointAttempt(3);
@@ -30,9 +29,8 @@ public class PlayerTest {
 
 	@Test
 	public void testConstructor() {
-		Player player = new Player("Andreas Angin", 22);
+		Player player = new Player("Andreas Angin");
 		Assert.assertEquals(player.getName(), "Andreas Angin");
-		Assert.assertEquals(player.getJerseyNumber(), 22);
 		Assert.assertEquals(player.getFreeThrowAttempt(), 0);
 		Assert.assertEquals(player.getFreeThrowMade(), 0);
 	}
@@ -41,7 +39,6 @@ public class PlayerTest {
 	public void testSettersAndGetters(){
 		init();
 		Assert.assertEquals(player.getName(), "Andreas Angin");
-		Assert.assertEquals(player.getJerseyNumber(), 22);
 		Assert.assertEquals(player.getFreeThrowAttempt(), 1);
 		Assert.assertEquals(player.getFreeThrowMade(), 2);
 		Assert.assertEquals(player.getTwoPointAttempt(), 3);

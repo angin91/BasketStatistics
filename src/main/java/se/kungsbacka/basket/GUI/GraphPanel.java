@@ -2,6 +2,7 @@ package se.kungsbacka.basket.GUI;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
+import se.kungsbacka.basket.helper.HelperClass;
 
+@SuppressWarnings("serial")
 public class GraphPanel extends JPanel {
 
 	private int padding = 120;
@@ -32,20 +35,29 @@ public class GraphPanel extends JPanel {
 	private int numberYDivisions = 10;
 	private List<Integer> scores;
 	private List<Game> games;
-	private JButton freeThrowAttemptButton;
-	private JButton freeThrowMadeButton;
+	private JButton foulsButton;
 	private JButton twoPointAttemptButton;
 	private JButton twoPointMadeButton;
+	private JButton twoPointProcentButton;
 	private JButton threePointAttemptButton;
 	private JButton threePointMadeButton;
+	private JButton threePointProcentButton;
+	private JButton totalShotsAttemptButton;
+	private JButton totalShotsMadeButton;
+	private JButton totalShotsProcentButton;
+	private JButton freeThrowAttemptButton;
+	private JButton freeThrowMadeButton;
+	private JButton freeThrowProcentButton;
+	private JButton pointsButton;
 	private JButton defReboundsButton;
 	private JButton offReboundsButton;
+	private JButton totalReboundsButton;
 	private JButton stealsButton;
-	private JButton assistsButton;
-	private JButton foulsButton;
 	private JButton blocksButton;
-	private JButton deflectionsButton;
 	private JButton turnoversButton;
+	private JButton assistsButton;
+	private JButton deflectionsButton;
+	private JLabel playerName;
 
 	public GraphPanel(final Player player) {
 		scores = new ArrayList<Integer>();
@@ -53,81 +65,109 @@ public class GraphPanel extends JPanel {
 
 		setLayout(null);
 
-		freeThrowAttemptButton = new JButton("FTA");
-		freeThrowAttemptButton.setBounds(10, 10, 100, 40);
-		add(freeThrowAttemptButton);
+		playerName = new JLabel(player.getName());
+		playerName.setBounds(300, 450, 300, 100);
+		Font font = new Font("Verdana", Font.BOLD, 20);
+		playerName.setFont(font);
+		add(playerName);
 
-		freeThrowMadeButton = new JButton("FTM");
-		freeThrowMadeButton.setBounds(115, 10, 100, 40);
-		add(freeThrowMadeButton);
+		foulsButton = new JButton("FOUL");
+		foulsButton.setBounds(10, 10, 70, 40);
+		add(foulsButton);
 
 		twoPointAttemptButton = new JButton("FGA");
-		twoPointAttemptButton.setBounds(220, 10, 100, 40);
+		twoPointAttemptButton.setBounds(85, 10, 70, 40);
 		add(twoPointAttemptButton);
 
 		twoPointMadeButton = new JButton("FGM");
-		twoPointMadeButton.setBounds(325, 10, 100, 40);
+		twoPointMadeButton.setBounds(160, 10, 70, 40);
 		add(twoPointMadeButton);
 
+		twoPointProcentButton = new JButton("FG%");
+		twoPointProcentButton.setBounds(235, 10, 70, 40);
+		add(twoPointProcentButton);
+
 		threePointAttemptButton = new JButton("3PA");
-		threePointAttemptButton.setBounds(430, 10, 100, 40);
+		threePointAttemptButton.setBounds(310, 10, 70, 40);
 		add(threePointAttemptButton);
 
 		threePointMadeButton = new JButton("3PM");
-		threePointMadeButton.setBounds(535, 10, 100, 40);
+		threePointMadeButton.setBounds(385, 10, 70, 40);
 		add(threePointMadeButton);
 
+		threePointProcentButton = new JButton("3P%");
+		threePointProcentButton.setBounds(460, 10, 70, 40);
+		add(threePointProcentButton);
+
+		totalShotsAttemptButton = new JButton("TSA");
+		totalShotsAttemptButton.setBounds(535, 10, 70, 40);
+		add(totalShotsAttemptButton);
+
+		totalShotsMadeButton = new JButton("TSM");
+		totalShotsMadeButton.setBounds(610, 10, 70, 40);
+		add(totalShotsMadeButton);
+
+		totalShotsProcentButton = new JButton("TS%");
+		totalShotsProcentButton.setBounds(685, 10, 70, 40);
+		add(totalShotsProcentButton);
+
+		freeThrowAttemptButton = new JButton("FTA");
+		freeThrowAttemptButton.setBounds(760, 10, 70, 40);
+		add(freeThrowAttemptButton);
+
+		// ------
+		freeThrowMadeButton = new JButton("FTM");
+		freeThrowMadeButton.setBounds(10, 55, 70, 40);
+		add(freeThrowMadeButton);
+
+		freeThrowProcentButton = new JButton("FT%");
+		freeThrowProcentButton.setBounds(85, 55, 70, 40);
+		add(freeThrowProcentButton);
+
+		pointsButton = new JButton("PTS");
+		pointsButton.setBounds(160, 55, 70, 40);
+		add(pointsButton);
+
 		defReboundsButton = new JButton("DEFR");
-		defReboundsButton.setBounds(640, 10, 100, 40);
+		defReboundsButton.setBounds(235, 55, 70, 40);
 		add(defReboundsButton);
 
 		offReboundsButton = new JButton("OFFR");
-		offReboundsButton.setBounds(10, 55, 100, 40);
+		offReboundsButton.setBounds(310, 55, 70, 40);
 		add(offReboundsButton);
 
+		totalReboundsButton = new JButton("TOT");
+		totalReboundsButton.setBounds(385, 55, 70, 40);
+		add(totalReboundsButton);
+
 		stealsButton = new JButton("STL");
-		stealsButton.setBounds(115, 55, 100, 40);
+		stealsButton.setBounds(460, 55, 70, 40);
 		add(stealsButton);
 
-		assistsButton = new JButton("ASS");
-		assistsButton.setBounds(220, 55, 100, 40);
-		add(assistsButton);
-
-		foulsButton = new JButton("FOUL");
-		foulsButton.setBounds(325, 55, 100, 40);
-		add(foulsButton);
-
 		blocksButton = new JButton("BLK");
-		blocksButton.setBounds(430, 55, 100, 40);
+		blocksButton.setBounds(535, 55, 70, 40);
 		add(blocksButton);
 
-		deflectionsButton = new JButton("DEFL");
-		deflectionsButton.setBounds(535, 55, 100, 40);
-		add(deflectionsButton);
-
 		turnoversButton = new JButton("TO");
-		turnoversButton.setBounds(640, 55, 100, 40);
+		turnoversButton.setBounds(610, 55, 70, 40);
 		add(turnoversButton);
 
-		freeThrowAttemptButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scores.clear();
-				for (Game game : games) {
-					Player player2 = game.getPlayer(player.getName());
-					scores.add(player2.getFreeThrowAttempt());
-				}
-				setScores(scores);
-			}
-		});
-		freeThrowMadeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scores.clear();
-				for (Game game : games) {
-					Player player2 = game.getPlayer(player.getName());
-					scores.add(player2.getFreeThrowMade());
-				}
-				setScores(scores);
+		assistsButton = new JButton("ASS");
+		assistsButton.setBounds(685, 55, 70, 40);
+		add(assistsButton);
 
+		deflectionsButton = new JButton("DEFL");
+		deflectionsButton.setBounds(760, 55, 70, 40);
+		add(deflectionsButton);
+
+		foulsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getFouls());
+				}
+				setScores(scores);
 			}
 		});
 		twoPointAttemptButton.addActionListener(new ActionListener() {
@@ -146,6 +186,16 @@ public class GraphPanel extends JPanel {
 				for (Game game : games) {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTwoPointMade());
+				}
+				setScores(scores);
+			}
+		});
+		twoPointProcentButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add((int) HelperClass.getTwoPointProcent(player2.getTwoPointAttempt(), player2.getTwoPointMade()));
 				}
 				setScores(scores);
 			}
@@ -170,6 +220,96 @@ public class GraphPanel extends JPanel {
 				setScores(scores);
 			}
 		});
+		threePointProcentButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add((int) HelperClass.getThreePointProcent(player2.getThreePointAttempt(), player2.getThreePointMade()));
+				}
+				setScores(scores);
+			}
+		});
+		totalShotsAttemptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getTotalShotsAttempt());
+				}
+				setScores(scores);
+			}
+		});
+		totalShotsMadeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getTotalShotsMade());
+				}
+				setScores(scores);
+			}
+		});
+		totalShotsProcentButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add((int) HelperClass.getTotalShotProcent(
+							player2.getTotalShotsAttempt(),
+							player2.getTotalShotsMade()));
+				}
+				setScores(scores);
+			}
+		});
+		freeThrowAttemptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getFreeThrowAttempt());
+				}
+				setScores(scores);
+			}
+		});
+		freeThrowMadeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getFreeThrowMade());
+				}
+				setScores(scores);
+
+			}
+		});
+		freeThrowProcentButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add((int) HelperClass.getFreethrowProcent(
+							player2.getFreeThrowAttempt(),
+							player2.getFreeThrowMade()));
+				}
+				setScores(scores);
+
+			}
+		});
+		pointsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(HelperClass.getTotalPoints(
+							player2.getTwoPointMade(),
+							player2.getThreePointMade(),
+							player2.getFreeThrowMade()));
+				}
+				setScores(scores);
+
+			}
+		});
 		defReboundsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scores.clear();
@@ -190,32 +330,22 @@ public class GraphPanel extends JPanel {
 				setScores(scores);
 			}
 		});
+		totalReboundsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getTotalRebounds());
+				}
+				setScores(scores);
+			}
+		});
 		stealsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scores.clear();
 				for (Game game : games) {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getSteals());
-				}
-				setScores(scores);
-			}
-		});
-		assistsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scores.clear();
-				for (Game game : games) {
-					Player player2 = game.getPlayer(player.getName());
-					scores.add(player2.getAssists());
-				}
-				setScores(scores);
-			}
-		});
-		foulsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scores.clear();
-				for (Game game : games) {
-					Player player2 = game.getPlayer(player.getName());
-					scores.add(player2.getFouls());
 				}
 				setScores(scores);
 			}
@@ -230,22 +360,32 @@ public class GraphPanel extends JPanel {
 				setScores(scores);
 			}
 		});
-		deflectionsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scores.clear();
-				for (Game game : games) {
-					Player player2 = game.getPlayer(player.getName());
-					scores.add(player2.getDeflections());
-				}
-				setScores(scores);
-			}
-		});
 		turnoversButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scores.clear();
 				for (Game game : games) {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTurnovers());
+				}
+				setScores(scores);
+			}
+		});
+		assistsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getAssists());
+				}
+				setScores(scores);
+			}
+		});
+		deflectionsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scores.clear();
+				for (Game game : games) {
+					Player player2 = game.getPlayer(player.getName());
+					scores.add(player2.getDeflections());
 				}
 				setScores(scores);
 			}
@@ -366,6 +506,9 @@ public class GraphPanel extends JPanel {
 		int maxScore = Integer.MIN_VALUE;
 		for (Integer score : scores) {
 			maxScore = Math.max(maxScore, score);
+		}
+		if (maxScore <= 0) {
+			return 10;
 		}
 		return maxScore;
 	}

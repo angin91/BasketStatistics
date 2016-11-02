@@ -38,7 +38,6 @@ public class ReadExcelTest {
 		game = games.get(0);
 		Player player = game.getPlayers().get(1);
 		Assert.assertEquals(player.getName(), "John Sundemo");
-		Assert.assertEquals(player.getJerseyNumber(), 12);
 		Assert.assertEquals(player.getTwoPointAttempt(), 1);
 		Assert.assertEquals(player.getTwoPointMade(), 2);
 		Assert.assertEquals(player.getThreePointAttempt(), 3);
