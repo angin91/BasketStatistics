@@ -39,9 +39,11 @@ public class Panel extends JPanel {
 	private DefaultTableModel statisticsModel;
 	private JScrollPane statisticsScrollPane;
 	private List<Game> allGames;
+	public static List<Player> allPlayers;
 
 	public Panel() {
 		allGames = new ArrayList<Game>();
+		allPlayers = new ArrayList<Player>();
 		games = new DefaultListModel<Game>();
 		players = new DefaultListModel<Player>();
 		final ReadExcel readExcel = new ReadExcel();
@@ -50,10 +52,15 @@ public class Panel extends JPanel {
 
 		// --Will remove
 		allGames = readExcel.readExcel("files/testreal2.xlsx", allGames);
+		allGames = readExcel.readExcel("files/testreal3.xlsx", allGames);
 		allGames = readExcel.readExcel("files/testreal.xls", allGames);
 		games.removeAllElements();
 		for (Game game : allGames) {
 			games.addElement(game);
+		}
+		System.out.println(allPlayers.size());
+		for (Player player : allPlayers) {
+			players.addElement(player);
 		}
 		// -----Will Remove
 
@@ -106,22 +113,28 @@ public class Panel extends JPanel {
 
 		gameList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				players.clear();
 				Game game = (Game) gameList.getSelectedValue();
-				for (Player player : game.getPlayers()) {
-					players.addElement(player);
-				}
 				addStatistics(game);
 			}
 		});
 		newGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
-				fc.showOpenDialog(Panel.this);
-				String path = fc.getSelectedFile().getPath();
+				int showOpenDialog = fc.showOpenDialog(Panel.this);
 
-				allGames = readExcel.readExcel(path, allGames);
-				games.addElement(allGames.get(allGames.size() - 1));
+				if (showOpenDialog == JFileChooser.APPROVE_OPTION) {
+					String path = fc.getSelectedFile().getPath();
+
+					allGames = readExcel.readExcel(path, allGames);
+					games.clear();
+					for (Game game : allGames) {
+						games.addElement(game);
+					}
+					players.clear();
+					for (Player player : allPlayers) {
+						players.addElement(player);
+					}
+				}
 			}
 		});
 		seeTrendButton.addActionListener(new ActionListener() {

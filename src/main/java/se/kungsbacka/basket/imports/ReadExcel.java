@@ -3,6 +3,7 @@ package se.kungsbacka.basket.imports;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,16 +16,19 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import se.kungsbacka.basket.GUI.Panel;
 import se.kungsbacka.basket.entities.Game;
 import se.kungsbacka.basket.entities.Player;
 
 public class ReadExcel {
 
-	boolean newGame;
+	private boolean newGame;
+	private boolean playerWithNoStats;
 
 	public List<Game> readExcel(String pathToFile, List<Game> games) {
 		Game game = new Game();
 		newGame = true;
+		playerWithNoStats = false;
 		try {
 			File myFile = new File(pathToFile);
 			FileInputStream fis = new FileInputStream(myFile);
@@ -48,6 +52,10 @@ public class ReadExcel {
 				Iterator<Cell> cellIterator = row.cellIterator();
 				while (cellIterator.hasNext()) {
 
+					if(playerWithNoStats){
+						break;
+					}
+					
 					Cell cell = cellIterator.next();
 					if (newGame) {
 						if (pathToFile.endsWith(".xlsx")) {
@@ -121,12 +129,21 @@ public class ReadExcel {
 						counter++;
 
 						break;
+					case Cell.CELL_TYPE_BLANK:
+						if (counter == 0) {
+							playerWithNoStats = true;
+							continue;
+						}
+	                    break;
 					default:
 						counter++;
 						break;
 					}
 				}
-				addGamesIntoPlayers(games, game, player);
+				if(!playerWithNoStats){
+					playerWithNoStats = false;
+					addGamesIntoPlayers(games, game, player);
+				}
 			}
 			games = returnGames(games, game);
 		} catch (IOException e) {
@@ -137,7 +154,6 @@ public class ReadExcel {
 
 	private List<Game> returnGames(List<Game> games, Game game) {
 		games.add(game);
-		System.out.println(game);
 		games = sort(games);
 		newGame = true;
 		return games;
@@ -176,6 +192,20 @@ public class ReadExcel {
 			}
 			player.getGames().add(game);
 			player.setGames(sort(player.getGames()));
+			
+			if(Panel.allPlayers.size() == 0){
+				Panel.allPlayers.add(player);
+			}
+			boolean dontExists = true;
+			for (int i = 0; i < Panel.allPlayers.size(); i++) {
+				if(Panel.allPlayers.get(i).getName().equalsIgnoreCase(player.getName())){
+					dontExists = false;
+					break;
+				}
+			}
+			if(dontExists){
+				Panel.allPlayers.add(player);
+			}
 		}
 	}
 }
