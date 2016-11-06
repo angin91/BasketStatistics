@@ -106,49 +106,48 @@ public class Player {
 		return getName();
 	}
 	
-	public double getFreethrowProcent() {
-		if(getFreeThrowAttempt() == 0 && getFreeThrowMade() == 0){
-			return 0.0;
+	public Player getPlayerAverage(){
+		
+		if(games.size() == 0){
+			return null;
+		}else if(games.size() == 1){
+			return this;
 		}
-		double d = (double) getFreeThrowMade() / getFreeThrowAttempt();
-		return round(d*100, 1);
-	}
-
-	public double getTwoPointProcent() {
-		if(getTwoPointAttempt() == 0 && getTwoPointMade() == 0){
-			return 0.0;
+		
+		Player player = new Player(getName());
+		
+		for (Game game : games) {
+			Player player2 = game.getPlayer(getName());
+			player.setFreeThrowAttempt(player.getFreeThrowAttempt() + player2.getFreeThrowAttempt());
+			player.setFreeThrowMade(player.getFreeThrowMade() + player2.getFreeThrowMade());
+			player.setTwoPointAttempt(player.getTwoPointAttempt() + player2.getTwoPointAttempt());
+			player.setTwoPointMade(player.getTwoPointMade() + player2.getTwoPointMade());
+			player.setThreePointAttempt(player.getThreePointAttempt() + player2.getThreePointAttempt());
+			player.setThreePointMade(player.getThreePointMade() + player2.getThreePointMade());
+			player.setDefRebounds(player.getDefRebounds() + player2.getDefRebounds());
+			player.setOffRebounds(player.getOffRebounds() + player2.getOffRebounds());
+			player.setSteals(player.getSteals() + player2.getSteals());
+			player.setAssists(getAssists() + player2.getAssists());
+			player.setFouls(player.getFouls() + player2.getFouls());
+			player.setBlocks(player.getBlocks() + player2.getBlocks());
+			player.setDeflections(player.getDeflections() + player2.getDeflections());
+			player.setTurnovers(player.getTurnovers() + player2.getTurnovers());
 		}
-		double d = (double) getTwoPointMade() / getTwoPointAttempt();
-		return round(d*100, 1);
-	}
-	
-	public double getThreePointProcent() {
-		if(getThreePointAttempt() == 0 && getThreePointMade() == 0){
-			return 0.0;
-		}
-		double d = (double) getThreePointMade() / getThreePointAttempt();
-		return round(d*100, 1);
-	}
-	
-	public double getTotalShotProcent() {
-		if(getTotalShotsAttempt() == 0 && getTotalShotsMade() == 0){
-			return 0.0;
-		}
-		double d = (double) getTotalShotsMade() / getTotalShotsAttempt();
-		return round(d*100, 1);
-	}
-
-	private static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
-
-	    long factor = (long) Math.pow(10, places);
-	    value = value * factor;
-	    long tmp = Math.round(value);
-	    return (double) tmp / factor;
-	}
-
-	public int getTotalPoints() {
-		int i = (getTwoPointMade() * 2) + (getThreePointMade() * 3) + getFreeThrowMade();
-		return i;
+		player.setFreeThrowAttempt(player.getFreeThrowAttempt() / games.size());
+		player.setFreeThrowMade(player.getFreeThrowMade() / games.size());
+		player.setTwoPointAttempt(player.getTwoPointAttempt() / games.size());
+		player.setTwoPointMade(player.getTwoPointMade() / games.size());
+		player.setThreePointAttempt(player.getThreePointAttempt() / games.size());
+		player.setThreePointMade(player.getThreePointMade() / games.size());
+		player.setDefRebounds(player.getDefRebounds() / games.size());
+		player.setOffRebounds(player.getOffRebounds() / games.size());
+		player.setSteals(player.getSteals() / games.size());
+		player.setAssists(getAssists() / games.size());
+		player.setFouls(player.getFouls() / games.size());
+		player.setBlocks(player.getBlocks() / games.size());
+		player.setDeflections(player.getDeflections() / games.size());
+		player.setTurnovers(player.getTurnovers() / games.size());
+		
+		return player;
 	}
 }

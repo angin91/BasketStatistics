@@ -8,7 +8,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
@@ -61,93 +63,133 @@ public class GraphPanel extends JPanel {
 	private JButton assistsButton;
 	private JButton deflectionsButton;
 	private JLabel playerName;
+	private Player PlayerAverage;
+	private JLabel playerAverageLabel;
 
 	public GraphPanel(final Player player) {
 		scores = new ArrayList<Integer>();
 		games = player.getGames();
-		
+		PlayerAverage = player.getPlayerAverage();
+
 		super.setLayout(new BorderLayout());
 
 		JPanel jPanelSouth = new JPanel();
 		jPanelSouth.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 		add(jPanelSouth, BorderLayout.SOUTH);
-		
-		//11, 2
+
 		JPanel jPanelNorth = new JPanel();
-		jPanelNorth.setLayout(new GridLayout(2, 11, 5, 5));
+		jPanelNorth.setLayout(new GridBagLayout());
 		add(jPanelNorth, BorderLayout.NORTH);
-		
 
 		playerName = new JLabel(player.getName());
 		Font font = new Font("Verdana", Font.BOLD, 20);
 		playerName.setFont(font);
 		jPanelSouth.add(playerName, BorderLayout.CENTER);
 
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.weightx = 1.0;
+		gbc.insets = new Insets(2, 2, 0, 2);
+
 		foulsButton = new JButton("FOUL");
-		jPanelNorth.add(foulsButton);
+		jPanelNorth.add(foulsButton, gbc);
 
+		gbc.gridx = 1;
 		twoPointAttemptButton = new JButton("FGA");
-		jPanelNorth.add(twoPointAttemptButton);
+		jPanelNorth.add(twoPointAttemptButton, gbc);
 
+		gbc.gridx = 2;
 		twoPointMadeButton = new JButton("FGM");
-		jPanelNorth.add(twoPointMadeButton);
+		jPanelNorth.add(twoPointMadeButton, gbc);
 
+		gbc.gridx = 3;
 		twoPointProcentButton = new JButton("FG%");
-		jPanelNorth.add(twoPointProcentButton);
+		jPanelNorth.add(twoPointProcentButton, gbc);
 
+		gbc.gridx = 4;
 		threePointAttemptButton = new JButton("3PA");
-		jPanelNorth.add(threePointAttemptButton);
+		jPanelNorth.add(threePointAttemptButton, gbc);
 
+		gbc.gridx = 5;
 		threePointMadeButton = new JButton("3PM");
-		jPanelNorth.add(threePointMadeButton);
+		jPanelNorth.add(threePointMadeButton, gbc);
 
+		gbc.gridx = 6;
 		threePointProcentButton = new JButton("3P%");
-		jPanelNorth.add(threePointProcentButton);
+		jPanelNorth.add(threePointProcentButton, gbc);
 
+		gbc.gridx = 7;
 		totalShotsAttemptButton = new JButton("TSA");
-		jPanelNorth.add(totalShotsAttemptButton);
+		jPanelNorth.add(totalShotsAttemptButton, gbc);
 
+		gbc.gridx = 8;
 		totalShotsMadeButton = new JButton("TSM");
-		jPanelNorth.add(totalShotsMadeButton);
+		jPanelNorth.add(totalShotsMadeButton, gbc);
 
+		gbc.gridx = 9;
 		totalShotsProcentButton = new JButton("TS%");
-		jPanelNorth.add(totalShotsProcentButton);
+		jPanelNorth.add(totalShotsProcentButton, gbc);
 
+		gbc.gridx = 10;
 		freeThrowAttemptButton = new JButton("FTA");
-		jPanelNorth.add(freeThrowAttemptButton);
+		jPanelNorth.add(freeThrowAttemptButton, gbc);
 
+		gbc.gridx = 0;
+		gbc.gridy = 1;
 		freeThrowMadeButton = new JButton("FTM");
-		jPanelNorth.add(freeThrowMadeButton);
+		jPanelNorth.add(freeThrowMadeButton, gbc);
 
+		gbc.gridx = 1;
 		freeThrowProcentButton = new JButton("FT%");
-		jPanelNorth.add(freeThrowProcentButton);
+		jPanelNorth.add(freeThrowProcentButton, gbc);
 
+		gbc.gridx = 2;
 		pointsButton = new JButton("PTS");
-		jPanelNorth.add(pointsButton);
+		jPanelNorth.add(pointsButton, gbc);
 
+		gbc.gridx = 3;
 		defReboundsButton = new JButton("DEFR");
-		jPanelNorth.add(defReboundsButton);
+		jPanelNorth.add(defReboundsButton, gbc);
 
+		gbc.gridx = 4;
 		offReboundsButton = new JButton("OFFR");
-		jPanelNorth.add(offReboundsButton);
+		jPanelNorth.add(offReboundsButton, gbc);
 
+		gbc.gridx = 5;
 		totalReboundsButton = new JButton("TOT");
-		jPanelNorth.add(totalReboundsButton);
+		jPanelNorth.add(totalReboundsButton, gbc);
 
+		gbc.gridx = 6;
 		stealsButton = new JButton("STL");
-		jPanelNorth.add(stealsButton);
+		jPanelNorth.add(stealsButton, gbc);
 
+		gbc.gridx = 7;
 		blocksButton = new JButton("BLK");
-		jPanelNorth.add(blocksButton);
+		jPanelNorth.add(blocksButton, gbc);
 
+		gbc.gridx = 8;
 		turnoversButton = new JButton("TO");
-		jPanelNorth.add(turnoversButton);
+		jPanelNorth.add(turnoversButton, gbc);
 
+		gbc.gridx = 9;
 		assistsButton = new JButton("ASS");
-		jPanelNorth.add(assistsButton);
+		jPanelNorth.add(assistsButton, gbc);
 
+		gbc.gridx = 10;
 		deflectionsButton = new JButton("DEFL");
-		jPanelNorth.add(deflectionsButton);
+		jPanelNorth.add(deflectionsButton, gbc);
+
+		gbc.gridy = 2;
+		gbc.gridx = 5;
+		gbc.gridwidth = 11;
+		playerAverageLabel = new JLabel("Average: ");
+		font = new Font("Verdana", Font.PLAIN, 20);
+		playerAverageLabel.setFont(font);
+		jPanelNorth.add(playerAverageLabel, gbc);
 
 		foulsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -156,6 +198,8 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getFouls());
 				}
+				playerAverageLabel.setText("Average: "
+						+ PlayerAverage.getFouls());
 				setScores(scores);
 			}
 		});
@@ -166,6 +210,8 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTwoPointAttempt());
 				}
+				playerAverageLabel.setText("Average: "
+						+ PlayerAverage.getTwoPointAttempt());
 				setScores(scores);
 			}
 		});
@@ -176,6 +222,8 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTwoPointMade());
 				}
+				playerAverageLabel.setText("Average: "
+						+ PlayerAverage.getTwoPointMade());
 				setScores(scores);
 			}
 		});
@@ -184,8 +232,14 @@ public class GraphPanel extends JPanel {
 				scores.clear();
 				for (Game game : games) {
 					Player player2 = game.getPlayer(player.getName());
-					scores.add((int) HelperClass.getTwoPointProcent(player2.getTwoPointAttempt(), player2.getTwoPointMade()));
+					scores.add((int) HelperClass.getTwoPointProcent(
+							player2.getTwoPointAttempt(),
+							player2.getTwoPointMade()));
 				}
+				playerAverageLabel.setText("Average: "
+						+ HelperClass.getTwoPointProcent(
+								PlayerAverage.getTwoPointAttempt(),
+								PlayerAverage.getTwoPointMade()) + "%");
 				setScores(scores);
 			}
 		});
@@ -196,6 +250,8 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getThreePointAttempt());
 				}
+				playerAverageLabel.setText("Average: "
+						+ PlayerAverage.getThreePointAttempt());
 				setScores(scores);
 			}
 		});
@@ -206,6 +262,8 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getThreePointMade());
 				}
+				playerAverageLabel.setText("Average: "
+						+ PlayerAverage.getThreePointMade());
 				setScores(scores);
 			}
 		});
@@ -214,8 +272,14 @@ public class GraphPanel extends JPanel {
 				scores.clear();
 				for (Game game : games) {
 					Player player2 = game.getPlayer(player.getName());
-					scores.add((int) HelperClass.getThreePointProcent(player2.getThreePointAttempt(), player2.getThreePointMade()));
+					scores.add((int) HelperClass.getThreePointProcent(
+							player2.getThreePointAttempt(),
+							player2.getThreePointMade()));
 				}
+				playerAverageLabel.setText("Average: "
+						+ HelperClass.getThreePointProcent(
+								PlayerAverage.getThreePointAttempt(),
+								PlayerAverage.getThreePointMade()) + "%");
 				setScores(scores);
 			}
 		});
@@ -226,6 +290,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTotalShotsAttempt());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getTotalShotsAttempt());
 				setScores(scores);
 			}
 		});
@@ -236,6 +301,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTotalShotsMade());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getTotalShotsMade());
 				setScores(scores);
 			}
 		});
@@ -248,6 +314,9 @@ public class GraphPanel extends JPanel {
 							player2.getTotalShotsAttempt(),
 							player2.getTotalShotsMade()));
 				}
+				playerAverageLabel.setText("Average: " + HelperClass.getTotalShotProcent(
+						PlayerAverage.getTotalShotsAttempt(),
+						PlayerAverage.getTotalShotsMade()) + "%");
 				setScores(scores);
 			}
 		});
@@ -258,6 +327,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getFreeThrowAttempt());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getFreeThrowAttempt());
 				setScores(scores);
 			}
 		});
@@ -268,6 +338,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getFreeThrowMade());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getFreeThrowMade());
 				setScores(scores);
 
 			}
@@ -281,6 +352,9 @@ public class GraphPanel extends JPanel {
 							player2.getFreeThrowAttempt(),
 							player2.getFreeThrowMade()));
 				}
+				playerAverageLabel.setText("Average: " + HelperClass.getFreethrowProcent(
+						PlayerAverage.getFreeThrowAttempt(),
+						PlayerAverage.getFreeThrowMade()) + "%");
 				setScores(scores);
 
 			}
@@ -295,6 +369,10 @@ public class GraphPanel extends JPanel {
 							player2.getThreePointMade(),
 							player2.getFreeThrowMade()));
 				}
+				playerAverageLabel.setText("Average: " + HelperClass.getTotalPoints(
+						PlayerAverage.getTwoPointMade(),
+						PlayerAverage.getThreePointMade(),
+						PlayerAverage.getFreeThrowMade()));
 				setScores(scores);
 
 			}
@@ -306,6 +384,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getDefRebounds());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getDefRebounds());
 				setScores(scores);
 			}
 		});
@@ -316,6 +395,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getOffRebounds());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getOffRebounds());
 				setScores(scores);
 			}
 		});
@@ -326,6 +406,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTotalRebounds());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getTotalRebounds());
 				setScores(scores);
 			}
 		});
@@ -336,6 +417,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getSteals());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getSteals());
 				setScores(scores);
 			}
 		});
@@ -346,6 +428,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getBlocks());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getBlocks());
 				setScores(scores);
 			}
 		});
@@ -356,6 +439,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getTurnovers());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getTurnovers());
 				setScores(scores);
 			}
 		});
@@ -366,6 +450,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getAssists());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getAssists());
 				setScores(scores);
 			}
 		});
@@ -376,6 +461,7 @@ public class GraphPanel extends JPanel {
 					Player player2 = game.getPlayer(player.getName());
 					scores.add(player2.getDeflections());
 				}
+				playerAverageLabel.setText("Average: " + PlayerAverage.getDeflections());
 				setScores(scores);
 			}
 		});
@@ -402,8 +488,9 @@ public class GraphPanel extends JPanel {
 
 		// draw white background
 		g2.setColor(Color.WHITE);
-		g2.fillRect(graphPadding + labelPadding, graphPadding, getWidth() - (2 * graphPadding)
-				- labelPadding, getHeight() - 2 * graphPadding - labelPadding);
+		g2.fillRect(graphPadding + labelPadding, graphPadding, getWidth()
+				- (2 * graphPadding) - labelPadding, getHeight() - 2
+				* graphPadding - labelPadding);
 		g2.setColor(Color.BLACK);
 
 		// create hatch marks and grid lines for y axis.
@@ -440,8 +527,8 @@ public class GraphPanel extends JPanel {
 				int y1 = y0 - pointWidth;
 				if ((i % ((int) ((scores.size() / 20)) + 1)) == 0) {
 					g2.setColor(gridColor);
-					g2.drawLine(x0, getHeight() - graphPadding - labelPadding - 1
-							- pointWidth, x1, graphPadding);
+					g2.drawLine(x0, getHeight() - graphPadding - labelPadding
+							- 1 - pointWidth, x1, graphPadding);
 					g2.setColor(Color.BLACK);
 					String xLabel = games.get(i).toString();
 					FontMetrics metrics = g2.getFontMetrics();
@@ -457,8 +544,8 @@ public class GraphPanel extends JPanel {
 		g2.drawLine(graphPadding + labelPadding, getHeight() - graphPadding
 				- labelPadding, graphPadding + labelPadding, graphPadding);
 		g2.drawLine(graphPadding + labelPadding, getHeight() - graphPadding
-				- labelPadding, getWidth() - graphPadding, getHeight() - graphPadding
-				- labelPadding);
+				- labelPadding, getWidth() - graphPadding, getHeight()
+				- graphPadding - labelPadding);
 
 		Stroke oldStroke = g2.getStroke();
 		g2.setColor(lineColor);
