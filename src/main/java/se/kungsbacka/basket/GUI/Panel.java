@@ -1,10 +1,17 @@
 package se.kungsbacka.basket.GUI;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -40,48 +47,54 @@ public class Panel extends JPanel {
 	private JScrollPane statisticsScrollPane;
 	private List<Game> allGames;
 	public static List<Player> allPlayers;
+	private final ReadExcel readExcel;
 
-	public Panel() {
+	public Panel(JFrame frame) {
 		allGames = new ArrayList<Game>();
 		allPlayers = new ArrayList<Player>();
 		games = new DefaultListModel<Game>();
 		players = new DefaultListModel<Player>();
-		final ReadExcel readExcel = new ReadExcel();
+		readExcel = new ReadExcel();
+		
+		super.setLayout(new GridBagLayout());
 
-		setLayout(null);
+		importGamesInFile();
 
-		// --Will remove
-		allGames = readExcel.readExcel("files/testreal2.xlsx", allGames);
-		allGames = readExcel.readExcel("files/testreal3.xlsx", allGames);
-		allGames = readExcel.readExcel("files/testreal.xls", allGames);
-		games.removeAllElements();
-		for (Game game : allGames) {
-			games.addElement(game);
-		}
-		System.out.println(allPlayers.size());
-		for (Player player : allPlayers) {
-			players.addElement(player);
-		}
-		// -----Will Remove
+		GridBagConstraints gbc = new GridBagConstraints();
 
+		// chat box
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridheight = 2;
+		gbc.weightx = 1.0;
+		gbc.insets = new Insets(10, 10, 0, 10);
 		gameList = new JList<Game>(games);
 		JScrollPane gameListScrollPane = new JScrollPane(gameList);
-		gameListScrollPane.setBounds(20, 20, 300, 300);
-		add(gameListScrollPane);
+		add(gameListScrollPane, gbc);
 
+		gbc.gridx = 1;
+		gbc.gridy = 0;
 		playerList = new JList<Player>(players);
 		JScrollPane playerListScrollPane = new JScrollPane(playerList);
-		playerListScrollPane.setBounds(340, 20, 300, 300);
-		add(playerListScrollPane);
+		add(playerListScrollPane, gbc);
 
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.weighty = 1.0;
 		newGameButton = new JButton("New game");
-		newGameButton.setBounds(660, 20, 140, 140);
-		add(newGameButton);
+		add(newGameButton, gbc);
 
+		gbc.gridx = 2;
+		gbc.gridy = 1;
 		seeTrendButton = new JButton("See player trend");
-		seeTrendButton.setBounds(660, 180, 140, 140);
-		add(seeTrendButton);
+		add(seeTrendButton, gbc);
 
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridwidth = 4;
+		gbc.insets = new Insets(10, 10, 10, 10);
 		statisticsModel = new DefaultTableModel();
 		statisticsModel.addColumn("Name");
 		statisticsModel.addColumn("PF");
@@ -108,8 +121,7 @@ public class Panel extends JPanel {
 		statisticsModel.addColumn("DEFL");
 		statisticsTable = new JTable(statisticsModel);
 		statisticsScrollPane = new JScrollPane(statisticsTable);
-		statisticsScrollPane.setBounds(20, 400, 800, 300);
-		add(statisticsScrollPane);
+		add(statisticsScrollPane, gbc);
 
 		gameList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -168,15 +180,6 @@ public class Panel extends JPanel {
 		});
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Basketball statistics");
-		frame.getContentPane().add(new Panel());
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1000, 800);
-		frame.setVisible(true);
-	}
-
 	private void addStatistics(Game game) {
 
 		// Clear statistics
@@ -220,5 +223,52 @@ public class Panel extends JPanel {
 		}
 		statisticsModel.addRow(game.getTotalGameStatistics());
 		statisticsTable.setModel(statisticsModel);
+	}
+
+	private void importGamesInFile() {
+		final List<Path> files = new ArrayList<Path>();
+
+		Path path = Paths.get("C:\\files");
+		try {
+			DirectoryStream<Path> stream;
+			stream = Files.newDirectoryStream(path);
+			for (Path entry : stream) {
+				files.add(entry);
+			}
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		for (Path entry : files) {
+			allGames = readExcel.readExcel(entry.toString(), allGames);
+		}
+		games.removeAllElements();
+		for (Game game : allGames) {
+			games.addElement(game);
+		}
+		for (Player player : allPlayers) {
+			players.addElement(player);
+		}
+	}
+	
+	private static void createAndShowGui() {
+
+		JFrame frame = new JFrame("In Game Menu");
+		Panel mainPanel = new Panel(frame);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(mainPanel);
+		frame.pack();
+		frame.setLocationByPlatform(true);
+		frame.setSize(1000, 800);
+		frame.setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				createAndShowGui();
+			}
+		});
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
@@ -25,7 +26,9 @@ import se.kungsbacka.basket.helper.HelperClass;
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel {
 
-	private int padding = 120;
+	private int buttonPadding = 5;
+	
+	private int graphPadding = 120;
 	private int labelPadding = 25;
 	private Color lineColor = new Color(44, 102, 230, 180);
 	private Color pointColor = new Color(100, 100, 100, 180);
@@ -66,10 +69,11 @@ public class GraphPanel extends JPanel {
 		setLayout(null);
 
 		playerName = new JLabel(player.getName());
-		playerName.setBounds(300, 450, 300, 100);
+//		playerName.setHorizontalAlignment(JLabel.SOUTH);
+//		playerName.setBounds(300, 450, 300, 100);
 		Font font = new Font("Verdana", Font.BOLD, 20);
 		playerName.setFont(font);
-		add(playerName);
+//		add(playerName);
 
 		foulsButton = new JButton("FOUL");
 		foulsButton.setBounds(10, 10, 70, 40);
@@ -399,36 +403,36 @@ public class GraphPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
-		int xScale = ((int) getWidth() - (2 * padding) - labelPadding)
+		int xScale = ((int) getWidth() - (2 * graphPadding) - labelPadding)
 				/ (scores.size() - 1);
-		int yScale = ((int) getHeight() - 2 * padding - labelPadding)
+		int yScale = ((int) getHeight() - 2 * graphPadding - labelPadding)
 				/ (getMaxScore() - getMinScore());
 
 		List<Point> graphPoints = new ArrayList<Point>();
 		for (int i = 0; i < scores.size(); i++) {
-			int x1 = (int) (i * xScale + padding + labelPadding);
-			int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + padding);
+			int x1 = (int) (i * xScale + graphPadding + labelPadding);
+			int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + graphPadding);
 			graphPoints.add(new Point(x1, y1));
 		}
 
 		// draw white background
 		g2.setColor(Color.WHITE);
-		g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding)
-				- labelPadding, getHeight() - 2 * padding - labelPadding);
+		g2.fillRect(graphPadding + labelPadding, graphPadding, getWidth() - (2 * graphPadding)
+				- labelPadding, getHeight() - 2 * graphPadding - labelPadding);
 		g2.setColor(Color.BLACK);
 
 		// create hatch marks and grid lines for y axis.
 		for (int i = 0; i < numberYDivisions + 1; i++) {
-			int x0 = padding + labelPadding;
-			int x1 = pointWidth + padding + labelPadding;
+			int x0 = graphPadding + labelPadding;
+			int x1 = pointWidth + graphPadding + labelPadding;
 			int y0 = getHeight()
-					- ((i * (getHeight() - padding * 2 - labelPadding))
-							/ numberYDivisions + padding + labelPadding);
+					- ((i * (getHeight() - graphPadding * 2 - labelPadding))
+							/ numberYDivisions + graphPadding + labelPadding);
 			int y1 = y0;
 			if (scores.size() > 0) {
 				g2.setColor(gridColor);
-				g2.drawLine(padding + labelPadding + 1 + pointWidth, y0,
-						getWidth() - padding, y1);
+				g2.drawLine(graphPadding + labelPadding + 1 + pointWidth, y0,
+						getWidth() - graphPadding, y1);
 				g2.setColor(Color.BLACK);
 				String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore())
 						* ((i * 1.0) / numberYDivisions)) * 100))
@@ -444,15 +448,15 @@ public class GraphPanel extends JPanel {
 		// and for x axis
 		for (int i = 0; i < scores.size(); i++) {
 			if (scores.size() > 1) {
-				int x0 = i * (getWidth() - padding * 2 - labelPadding)
-						/ (scores.size() - 1) + padding + labelPadding;
+				int x0 = i * (getWidth() - graphPadding * 2 - labelPadding)
+						/ (scores.size() - 1) + graphPadding + labelPadding;
 				int x1 = x0;
-				int y0 = getHeight() - padding - labelPadding;
+				int y0 = getHeight() - graphPadding - labelPadding;
 				int y1 = y0 - pointWidth;
 				if ((i % ((int) ((scores.size() / 20)) + 1)) == 0) {
 					g2.setColor(gridColor);
-					g2.drawLine(x0, getHeight() - padding - labelPadding - 1
-							- pointWidth, x1, padding);
+					g2.drawLine(x0, getHeight() - graphPadding - labelPadding - 1
+							- pointWidth, x1, graphPadding);
 					g2.setColor(Color.BLACK);
 					String xLabel = games.get(i).toString();
 					FontMetrics metrics = g2.getFontMetrics();
@@ -465,10 +469,10 @@ public class GraphPanel extends JPanel {
 		}
 
 		// create x and y axes
-		g2.drawLine(padding + labelPadding, getHeight() - padding
-				- labelPadding, padding + labelPadding, padding);
-		g2.drawLine(padding + labelPadding, getHeight() - padding
-				- labelPadding, getWidth() - padding, getHeight() - padding
+		g2.drawLine(graphPadding + labelPadding, getHeight() - graphPadding
+				- labelPadding, graphPadding + labelPadding, graphPadding);
+		g2.drawLine(graphPadding + labelPadding, getHeight() - graphPadding
+				- labelPadding, getWidth() - graphPadding, getHeight() - graphPadding
 				- labelPadding);
 
 		Stroke oldStroke = g2.getStroke();
@@ -492,11 +496,6 @@ public class GraphPanel extends JPanel {
 			g2.fillOval(x, y, ovalW, ovalH);
 		}
 	}
-
-	// @Override
-	// public Dimension getPreferredSize() {
-	// return new Dimension(width, heigth);
-	// }
 
 	private int getMinScore() {
 		return 0;

@@ -3,7 +3,6 @@ package se.kungsbacka.basket.imports;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -12,7 +11,6 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
