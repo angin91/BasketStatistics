@@ -1,7 +1,9 @@
 package se.kungsbacka.basket.GUI;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -26,8 +28,6 @@ import se.kungsbacka.basket.helper.HelperClass;
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel {
 
-	private int buttonPadding = 5;
-	
 	private int graphPadding = 120;
 	private int labelPadding = 25;
 	private Color lineColor = new Color(44, 102, 230, 180);
@@ -65,104 +65,89 @@ public class GraphPanel extends JPanel {
 	public GraphPanel(final Player player) {
 		scores = new ArrayList<Integer>();
 		games = player.getGames();
+		
+		super.setLayout(new BorderLayout());
 
-		setLayout(null);
+		JPanel jPanelSouth = new JPanel();
+		jPanelSouth.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
+		add(jPanelSouth, BorderLayout.SOUTH);
+		
+		//11, 2
+		JPanel jPanelNorth = new JPanel();
+		jPanelNorth.setLayout(new GridLayout(2, 11, 5, 5));
+		add(jPanelNorth, BorderLayout.NORTH);
+		
 
 		playerName = new JLabel(player.getName());
-//		playerName.setHorizontalAlignment(JLabel.SOUTH);
-//		playerName.setBounds(300, 450, 300, 100);
 		Font font = new Font("Verdana", Font.BOLD, 20);
 		playerName.setFont(font);
-//		add(playerName);
+		jPanelSouth.add(playerName, BorderLayout.CENTER);
 
 		foulsButton = new JButton("FOUL");
-		foulsButton.setBounds(10, 10, 70, 40);
-		add(foulsButton);
+		jPanelNorth.add(foulsButton);
 
 		twoPointAttemptButton = new JButton("FGA");
-		twoPointAttemptButton.setBounds(85, 10, 70, 40);
-		add(twoPointAttemptButton);
+		jPanelNorth.add(twoPointAttemptButton);
 
 		twoPointMadeButton = new JButton("FGM");
-		twoPointMadeButton.setBounds(160, 10, 70, 40);
-		add(twoPointMadeButton);
+		jPanelNorth.add(twoPointMadeButton);
 
 		twoPointProcentButton = new JButton("FG%");
-		twoPointProcentButton.setBounds(235, 10, 70, 40);
-		add(twoPointProcentButton);
+		jPanelNorth.add(twoPointProcentButton);
 
 		threePointAttemptButton = new JButton("3PA");
-		threePointAttemptButton.setBounds(310, 10, 70, 40);
-		add(threePointAttemptButton);
+		jPanelNorth.add(threePointAttemptButton);
 
 		threePointMadeButton = new JButton("3PM");
-		threePointMadeButton.setBounds(385, 10, 70, 40);
-		add(threePointMadeButton);
+		jPanelNorth.add(threePointMadeButton);
 
 		threePointProcentButton = new JButton("3P%");
-		threePointProcentButton.setBounds(460, 10, 70, 40);
-		add(threePointProcentButton);
+		jPanelNorth.add(threePointProcentButton);
 
 		totalShotsAttemptButton = new JButton("TSA");
-		totalShotsAttemptButton.setBounds(535, 10, 70, 40);
-		add(totalShotsAttemptButton);
+		jPanelNorth.add(totalShotsAttemptButton);
 
 		totalShotsMadeButton = new JButton("TSM");
-		totalShotsMadeButton.setBounds(610, 10, 70, 40);
-		add(totalShotsMadeButton);
+		jPanelNorth.add(totalShotsMadeButton);
 
 		totalShotsProcentButton = new JButton("TS%");
-		totalShotsProcentButton.setBounds(685, 10, 70, 40);
-		add(totalShotsProcentButton);
+		jPanelNorth.add(totalShotsProcentButton);
 
 		freeThrowAttemptButton = new JButton("FTA");
-		freeThrowAttemptButton.setBounds(760, 10, 70, 40);
-		add(freeThrowAttemptButton);
+		jPanelNorth.add(freeThrowAttemptButton);
 
-		// ------
 		freeThrowMadeButton = new JButton("FTM");
-		freeThrowMadeButton.setBounds(10, 55, 70, 40);
-		add(freeThrowMadeButton);
+		jPanelNorth.add(freeThrowMadeButton);
 
 		freeThrowProcentButton = new JButton("FT%");
-		freeThrowProcentButton.setBounds(85, 55, 70, 40);
-		add(freeThrowProcentButton);
+		jPanelNorth.add(freeThrowProcentButton);
 
 		pointsButton = new JButton("PTS");
-		pointsButton.setBounds(160, 55, 70, 40);
-		add(pointsButton);
+		jPanelNorth.add(pointsButton);
 
 		defReboundsButton = new JButton("DEFR");
-		defReboundsButton.setBounds(235, 55, 70, 40);
-		add(defReboundsButton);
+		jPanelNorth.add(defReboundsButton);
 
 		offReboundsButton = new JButton("OFFR");
-		offReboundsButton.setBounds(310, 55, 70, 40);
-		add(offReboundsButton);
+		jPanelNorth.add(offReboundsButton);
 
 		totalReboundsButton = new JButton("TOT");
-		totalReboundsButton.setBounds(385, 55, 70, 40);
-		add(totalReboundsButton);
+		jPanelNorth.add(totalReboundsButton);
 
 		stealsButton = new JButton("STL");
-		stealsButton.setBounds(460, 55, 70, 40);
-		add(stealsButton);
+		jPanelNorth.add(stealsButton);
 
 		blocksButton = new JButton("BLK");
-		blocksButton.setBounds(535, 55, 70, 40);
-		add(blocksButton);
+		jPanelNorth.add(blocksButton);
 
 		turnoversButton = new JButton("TO");
-		turnoversButton.setBounds(610, 55, 70, 40);
-		add(turnoversButton);
+		jPanelNorth.add(turnoversButton);
 
 		assistsButton = new JButton("ASS");
-		assistsButton.setBounds(685, 55, 70, 40);
-		add(assistsButton);
+		jPanelNorth.add(assistsButton);
 
 		deflectionsButton = new JButton("DEFL");
-		deflectionsButton.setBounds(760, 55, 70, 40);
-		add(deflectionsButton);
+		jPanelNorth.add(deflectionsButton);
 
 		foulsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
